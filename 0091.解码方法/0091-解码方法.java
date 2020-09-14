@@ -1,20 +1,34 @@
 class Solution {
     public int numDecodings(String s) {
-        if (s.charAt(0) == '0') return 0;
-        
-        int[] dp = new int[s.length() + 1];
-        dp[0] = dp[1] = 1;
-        
-        for (int i = 2; i <= s.length(); i++) {
-            //如果该位不为'0'，说明该位单独成字母合法
-            if (s.charAt(i - 1) != '0') { 
-                dp[i] += dp[i - 1];
+        int[][] dp = new int[s.length()][2];
+        dp[0][0] = s.charAt(0) != '0' ? 1 : 0;
+        dp[0][1] = 0;
+
+        if (s.length() < 2) {
+            return dp[0][0] + dp[0][1];
+        }
+
+        dp[1][0] = s.charAt(1) != '0' ? dp[0][0] + dp[0][1] : 0;
+        dp[1][1] = check(s.charAt(0), s.charAt(1)) ? 1 : 0;
+
+        for (int i = 2; i < s.length(); i++) {
+            if (s.charAt(i) != '0') {
+                dp[i][0] = dp[i - 1][0] + dp[i - 1][1];
             }
-            //如果后两位能组成"1x"（x为任意数字）或者"2x"（x小于7），说明最后两位组成字母合法
-            if ((s.charAt(i - 2) == '1') || (s.charAt(i - 2) == '2' && s.charAt(i - 1) <= '6')) {
-                dp[i] += dp[i - 2];
+            if (check(s.charAt(i-1), s.charAt(i))) {
+                dp[i][1] = dp[i - 2][0] + dp[i - 2][1];
             }
         }
-        return dp[s.length()];
+        return dp[s.length() - 1][0] + dp[s.length() - 1][1];
+    }
+
+    public boolean check(char first, char second){
+        if(first == '1'){
+            return true;
+        }
+        if(first == '2' && second <= '6'){
+            return true;
+        }
+        return false;
     }
 }
