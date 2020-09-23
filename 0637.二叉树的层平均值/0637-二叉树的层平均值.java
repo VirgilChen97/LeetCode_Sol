@@ -1,29 +1,37 @@
-import java.util.*;
-
 /**
- * Definition for a binary tree node. public class TreeNode { int val; TreeNode
- * left; TreeNode right; TreeNode(int x) { val = x; } }
+ * Definition for a binary tree node.
+ * public class TreeNode {
+ *     int val;
+ *     TreeNode left;
+ *     TreeNode right;
+ *     TreeNode() {}
+ *     TreeNode(int val) { this.val = val; }
+ *     TreeNode(int val, TreeNode left, TreeNode right) {
+ *         this.val = val;
+ *         this.left = left;
+ *         this.right = right;
+ *     }
+ * }
  */
 class Solution {
     public List<Double> averageOfLevels(TreeNode root) {
+        Queue<TreeNode> q = new LinkedList<>();
+        q.add(root);
         List<Double> res = new ArrayList<>();
-        Queue<TreeNode> queue = new LinkedList<>();
-        queue.offer(root);
-        while (!queue.isEmpty()) {
-            long sum = 0;
-            int numberOfNode = queue.size();
-            for (int i = 0; i < numberOfNode; i++) {
-                TreeNode current = queue.poll();
-                sum += current.val;
-                if (current.left != null) {
-                    queue.offer(current.left);
+        while(!q.isEmpty()){
+            int size = q.size();
+            long sum = 0L;
+            for(int i = 0; i < size; i++){
+                TreeNode now = q.poll();
+                sum += now.val;
+                if(now.left!=null){
+                    q.add(now.left);
                 }
-                if (current.right != null) {
-                    queue.offer(current.right);
+                if(now.right!=null){
+                    q.add(now.right);
                 }
             }
-            Double levelavg = sum / (double)numberOfNode;
-            res.add(levelavg);
+            res.add(sum/(double)size);
         }
         return res;
     }
