@@ -1,52 +1,46 @@
+import java.util.*;
+
 class Solution {
-    class Pair{
-        int x;
-        int y;
-        public Pair(int x, int y){
-            this.x = x;
-            this.y = y;
+    class Grid{
+        int row;
+        int col;
+        public Grid(int _row, int _col){
+            row = _row;
+            col = _col;
         }
     }
-
     public int maxDistance(int[][] grid) {
-        int res = -1;
-
-        Queue<Pair> lands = new LinkedList<>();
+        boolean [][] visited = new boolean[grid.length][grid[0].length];
+        int[][] directions = new int[][]{{1,0},{0,1},{-1,0},{0,-1}};
+        Queue<Grid> q = new LinkedList<>();
         for(int i = 0; i < grid.length; i++){
             for(int j = 0; j < grid[0].length; j++){
                 if(grid[i][j] == 1){
-                    lands.add(new Pair(i,j));
+                    q.offer(new Grid(i, j));
+                    visited[i][j] = true;
                 }
             }
-        }
-
-        if(lands.size() == 0 || lands.size() == grid.length * grid[0].length){
-            return res;
         }
         
-        while(!lands.isEmpty()){
-            int landsCount = lands.size();
-            for(int i = 0; i < landsCount; i++){
-                Pair nowLand = lands.poll();
-                grid[nowLand.x][nowLand.y] = -1;
-                if(nowLand.x - 1 >= 0 && grid[nowLand.x - 1][nowLand.y] == 0){
-                    grid[nowLand.x - 1][nowLand.y] = -1;
-                    lands.add(new Pair(nowLand.x - 1,nowLand.y));
-                }
-                if(nowLand.x + 1 < grid.length && grid[nowLand.x + 1][nowLand.y] == 0){
-                    grid[nowLand.x + 1][nowLand.y] = -1;
-                    lands.add(new Pair(nowLand.x + 1, nowLand.y));
-                }
-                if(nowLand.y - 1 >=0 && grid[nowLand.x][nowLand.y-1] == 0){
-                    grid[nowLand.x][nowLand.y - 1] = -1;
-                    lands.add(new Pair(nowLand.x, nowLand.y-1));
-                }
-                if(nowLand.y + 1 < grid[0].length && grid[nowLand.x][nowLand.y+1] == 0){
-                    grid[nowLand.x][nowLand.y + 1] = -1;
-                    lands.add(new Pair(nowLand.x, nowLand.y+1));
+        if(q.size() == grid.length * grid[0].length){
+            return -1;
+        }
+
+        int res = -1;
+        while(!q.isEmpty()){
+            int size = q.size();
+            for(int i = 0; i < size; i++){
+                Grid now = q.poll();
+                for(int[] direction:directions){
+                    int nextX = now.row + direction[0];
+                    int nextY = now.col + direction[1];
+                    if(nextX >= 0 && nextX < grid.length && nextY >=0 && nextY < grid[0].length && !visited[nextX][nextY]){
+                        q.offer(new Grid(nextX, nextY));
+                        visited[nextX][nextY] = true;
+                    }
                 }
             }
-            res ++;
+            res++;
         }
         return res;
     }
