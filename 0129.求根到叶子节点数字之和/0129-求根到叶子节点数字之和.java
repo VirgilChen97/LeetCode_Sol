@@ -8,23 +8,25 @@
  * }
  */
 class Solution {
-    int total = 0;
+    int sum = 0;
     public int sumNumbers(TreeNode root) {
-        if(root == null){
-            return 0;
-        }
-        search(root, 0);
-        return total;
+        helper(root, 0);
+        return sum;
     }
-    public void search(TreeNode root, int sum){
-        if(root.left == null && root.right == null){
-            total += sum*10 + root.val;
+
+    public void helper(TreeNode root, int val){
+        if(root == null){
+            return;
         }
+
         if(root.left != null){
-            search(root.left, sum*10 + root.val);
+            helper(root.left, (val + root.val)*10);
         }
         if(root.right != null){
-            search(root.right, sum*10 + root.val);
+            helper(root.right, (val + root.val)*10);
+        }
+        if(root.left == null && root.right == null){
+            sum += val + root.val;
         }
     }
 }

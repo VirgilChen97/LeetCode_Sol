@@ -1,22 +1,19 @@
 import java.util.*;
-import java.util.Map.Entry;
 
 class Solution {
     public boolean uniqueOccurrences(int[] arr) {
-        HashMap<Integer, Integer> map = new HashMap<>();
-        HashSet<Integer> set = new HashSet<>();
-        for (int num : arr) {
-            if (!map.containsKey(num)) {
-                map.put(num, 1);
-            } else {
-                map.put(num, map.get(num) + 1);
-            }
+        Map<Integer, Integer> map = new HashMap<>();
+        for(int a: arr){
+            map.computeIfAbsent(a, k->0);
+            map.put(a, map.get(a) + 1);
         }
-        for (Entry<Integer, Integer> entry : map.entrySet()) {
-            if(set.contains(entry.getValue())){
+        Set<Integer> set = new HashSet<>();
+        for(Integer v:map.values()){
+            if(set.contains(v)){
                 return false;
+            }else{
+                set.add(v);
             }
-            set.add(entry.getValue());
         }
         return true;
     }
